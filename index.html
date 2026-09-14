@@ -1,1 +1,684 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bhavin Domadiya — Senior Frontend Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy: #0B1F3A;
+    --navy-deep: #081729;
+    --panel: #0F2847;
+    --panel-line: rgba(232,241,250,0.14);
+    --grid-line: rgba(232,241,250,0.055);
+    --paper: #E8F1FA;
+    --paper-dim: rgba(232,241,250,0.62);
+    --paper-faint: rgba(232,241,250,0.38);
+    --amber: #F2A93B;
+    --cyan: #5AC8D8;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Space Grotesk', sans-serif;
+  }
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--navy);
+    color: var(--paper);
+    font-family: var(--sans);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection{ background: var(--amber); color: var(--navy-deep); }
+
+  .grid-bg{
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 44px 44px;
+    background-color: var(--navy);
+  }
+  .grid-bg::after{
+    content:"";
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 900px 500px at 50% -10%, rgba(90,200,216,0.10), transparent 60%);
+  }
+
+  a{ color: inherit; }
+  :focus-visible{ outline: 2px solid var(--amber); outline-offset: 3px; }
+
+  .wrap{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position: sticky; top:0; z-index: 50;
+    background: rgba(11,31,58,0.86);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 16px 32px;
+    max-width: 1080px; margin: 0 auto;
+  }
+  .nav-mark{
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    color: var(--paper);
+    display:flex; align-items:center; gap:10px;
+    text-decoration:none;
+  }
+  .nav-mark .dot{ width:8px; height:8px; background: var(--amber); border-radius:1px; transform: rotate(45deg); flex-shrink:0; }
+  .nav-links{ display:flex; gap:28px; list-style:none; margin:0; padding:0; }
+  .nav-links a{
+    font-size: 14.5px; text-decoration:none; color: var(--paper-dim);
+    transition: color .2s ease;
+    position:relative;
+  }
+  .nav-links a:hover{ color: var(--paper); }
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:-5px; width:0; height:1px; background: var(--amber);
+    transition: width .25s ease;
+  }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-toggle{ display:none; }
+  @media (max-width: 760px){
+    .nav-links{ display:none; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding: 88px 0 70px;
+    position:relative;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items:center;
+  }
+  @media (max-width: 860px){
+    .hero-grid{ grid-template-columns: 1fr; }
+  }
+  .tag-line{
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--cyan);
+    letter-spacing: 0.03em;
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 22px;
+  }
+  .tag-line .rule{ width: 34px; height:1px; background: var(--cyan); opacity:0.6; }
+
+  h1.name{
+    font-size: clamp(2.4rem, 5.4vw, 4.1rem);
+    line-height: 1.04;
+    margin: 0 0 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .role-line{
+    font-size: clamp(1.05rem, 1.9vw, 1.35rem);
+    color: var(--paper-dim);
+    margin: 0 0 28px;
+    max-width: 46ch;
+  }
+  .role-line .accent{ color: var(--amber); font-weight: 600; }
+
+  .hero-stats{
+    display:flex; gap: 34px; flex-wrap:wrap;
+    margin-bottom: 34px;
+  }
+  .stat{ }
+  .stat .num{ font-family: var(--mono); font-size: 1.7rem; color: var(--paper); font-weight:600; }
+  .stat .label{ font-size: 12.5px; color: var(--paper-faint); margin-top: 2px; }
+
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 12px 22px;
+    font-family: var(--sans); font-size: 14.5px; font-weight:600;
+    text-decoration:none;
+    border-radius: 3px;
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    border: 1px solid transparent;
+  }
+  .btn-primary{ background: var(--amber); color: var(--navy-deep); }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 8px 22px rgba(242,169,59,0.28); }
+  .btn-ghost{ border-color: var(--panel-line); color: var(--paper); }
+  .btn-ghost:hover{ border-color: var(--cyan); color: var(--cyan); transform: translateY(-2px); }
+
+  /* terminal */
+  .terminal{
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--panel-line);
+    background: rgba(255,255,255,0.02);
+  }
+  .terminal-bar span{ width:10px; height:10px; border-radius:50%; display:inline-block; background: rgba(232,241,250,0.18); }
+  .terminal-bar .fname{
+    margin-left: 8px; font-family: var(--mono); font-size: 12.5px; color: var(--paper-faint);
+  }
+  .terminal-body{
+    padding: 22px 22px 26px;
+    font-family: var(--mono);
+    font-size: 13.4px;
+    line-height: 1.75;
+    min-height: 300px;
+    color: var(--paper-dim);
+    white-space: pre-wrap;
+  }
+  .terminal-body .kw{ color: var(--cyan); }
+  .terminal-body .str{ color: var(--amber); }
+  .terminal-body .prop{ color: #9FD4E0; }
+  .caret{
+    display:inline-block; width:7px; height:15px; background: var(--amber);
+    margin-left: 2px; vertical-align: -2px;
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{ padding: 84px 0; border-top: 1px solid var(--panel-line); }
+  .sec-head{
+    display:flex; align-items:baseline; justify-content:space-between;
+    gap: 24px; margin-bottom: 44px; flex-wrap:wrap;
+  }
+  .sec-head h2{
+    font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+    margin: 0;
+    font-weight: 700;
+  }
+  .sec-index{
+    font-family: var(--mono); font-size: 13px; color: var(--paper-faint);
+  }
+  .sec-lede{
+    color: var(--paper-dim); max-width: 62ch; margin: -28px 0 44px;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-body{
+    display:grid; grid-template-columns: 1.4fr 1fr; gap: 56px;
+  }
+  @media (max-width: 800px){ .about-body{ grid-template-columns: 1fr; } }
+  .about-body p{ color: var(--paper-dim); font-size: 1.04rem; margin: 0 0 18px; max-width: 60ch; }
+  .spec-card{
+    border: 1px solid var(--panel-line);
+    background: var(--panel);
+    border-radius: 6px;
+    padding: 22px 24px;
+  }
+  .spec-card h3{
+    margin: 0 0 14px; font-size: 12.5px; font-family: var(--mono);
+    color: var(--cyan); font-weight:500;
+  }
+  .spec-row{
+    display:flex; justify-content:space-between; gap: 12px;
+    padding: 9px 0; border-bottom: 1px dashed var(--panel-line);
+    font-size: 14px;
+  }
+  .spec-row:last-child{ border-bottom:none; }
+  .spec-row .k{ color: var(--paper-faint); }
+  .spec-row .v{ color: var(--paper); text-align:right; }
+
+  /* ---------- EXPERIENCE ---------- */
+  .exp-block{
+    display:grid; grid-template-columns: 220px 1fr; gap: 40px;
+    padding: 28px 0;
+  }
+  @media (max-width: 700px){ .exp-block{ grid-template-columns: 1fr; gap: 10px; } }
+  .exp-meta{ }
+  .exp-meta .role{ font-weight: 700; font-size: 1.05rem; margin: 0 0 6px; }
+  .exp-meta .org{ color: var(--cyan); font-size: 14px; margin: 0 0 4px; }
+  .exp-meta .period{ font-family: var(--mono); font-size: 12.5px; color: var(--paper-faint); }
+  .exp-list{ margin:0; padding: 0; list-style:none; }
+  .exp-list li{
+    position: relative; padding-left: 22px; margin-bottom: 13px;
+    color: var(--paper-dim); font-size: 14.8px;
+  }
+  .exp-list li::before{
+    content:""; position:absolute; left:0; top: 8px;
+    width:7px; height:7px; background: var(--amber);
+    transform: rotate(45deg);
+  }
+
+  /* ---------- PROJECTS ---------- */
+  .proj-panel{
+    border: 1px solid var(--panel-line);
+    background: var(--panel);
+    border-radius: 6px;
+    margin-bottom: 22px;
+    overflow: hidden;
+    transition: border-color .2s ease;
+  }
+  .proj-panel:hover{ border-color: rgba(90,200,216,0.4); }
+  .proj-title-bar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--panel-line);
+    flex-wrap: wrap; gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .proj-title-bar h3{ margin:0; font-size: 1.12rem; font-weight: 700; }
+  .proj-code{
+    font-family: var(--mono); font-size: 11.5px; color: var(--paper-faint);
+    letter-spacing: 0.04em;
+  }
+  .proj-stack{
+    padding: 14px 24px 0; display:flex; gap:8px; flex-wrap:wrap;
+  }
+  .chip{
+    font-family: var(--mono); font-size: 11.5px; color: var(--cyan);
+    border: 1px solid rgba(90,200,216,0.3);
+    padding: 4px 9px; border-radius: 3px;
+  }
+  .proj-body{ padding: 8px 24px 24px; }
+  .proj-body ul{ margin: 10px 0 0; padding-left: 20px; color: var(--paper-dim); font-size: 14.6px; }
+  .proj-body li{ margin-bottom: 9px; }
+
+  /* ---------- SKILLS ---------- */
+  .skills-grid{
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1px;
+    background: var(--panel-line);
+    border: 1px solid var(--panel-line);
+  }
+  .skill-cell{ background: var(--navy); padding: 24px; }
+  .skill-cell h3{
+    font-family: var(--mono); font-size: 12px; color: var(--amber);
+    margin: 0 0 14px; letter-spacing: 0.03em;
+  }
+  .skill-cell .items{ display:flex; flex-wrap:wrap; gap: 7px; }
+  .skill-cell .items span{
+    font-size: 13px; color: var(--paper-dim);
+    padding: 5px 10px; border: 1px solid var(--panel-line); border-radius: 3px;
+  }
+
+  /* ---------- EDUCATION / ACHIEVEMENTS ---------- */
+  .two-col{ display:grid; grid-template-columns: 1fr 1fr; gap: 56px; }
+  @media (max-width: 760px){ .two-col{ grid-template-columns: 1fr; } }
+  .edu-item{ margin-bottom: 22px; }
+  .edu-item .deg{ font-weight:700; margin: 0 0 4px; }
+  .edu-item .school{ color: var(--paper-dim); font-size: 14px; margin: 0 0 3px; }
+  .edu-item .yrs{ font-family: var(--mono); font-size: 12.5px; color: var(--paper-faint); }
+  .ach-item{
+    display:flex; gap: 14px; margin-bottom: 20px; align-items:flex-start;
+  }
+  .ach-icon{
+    width: 26px; height: 26px; border: 1px solid var(--amber); flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; border-radius:3px;
+    color: var(--amber); font-family: var(--mono); font-size: 12px; margin-top:2px;
+  }
+  .ach-item p{ margin:0; color: var(--paper-dim); font-size: 14.6px; }
+  .ach-item strong{ color: var(--paper); }
+
+  /* ---------- CONTACT / FOOTER ---------- */
+  .contact{
+    text-align: center;
+  }
+  .contact h2{ font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 0 0 16px; }
+  .contact p{ color: var(--paper-dim); max-width: 50ch; margin: 0 auto 36px; }
+  .contact-links{
+    display:flex; justify-content:center; flex-wrap:wrap; gap: 14px;
+  }
+  footer{
+    padding: 30px 0 50px; text-align:center;
+    font-family: var(--mono); font-size: 12px; color: var(--paper-faint);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .caret{ animation: none; }
+    html{ scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="nav-mark"><span class="dot"></span>BHAVIN DOMADIYA</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:none; padding-top: 72px;">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="tag-line"><span class="rule"></span>SURAT, GUJARAT, INDIA</div>
+          <h1 class="name">Bhavin Domadiya</h1>
+          <p class="role-line">Senior Frontend Engineer building <span class="accent">Angular</span> and hybrid mobile applications that hold up at scale — architecture first, animation second.</p>
+
+          <div class="hero-stats">
+            <div class="stat"><div class="num">6+</div><div class="label">Years experience</div></div>
+            <div class="stat"><div class="num">100K+</div><div class="label">Active users shipped to</div></div>
+            <div class="stat"><div class="num">30%</div><div class="label">Performance improvement</div></div>
+          </div>
+
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="mailto:bhavindomadiya8980@gmail.com">Get in touch</a>
+            <a class="btn btn-ghost" href="https://bhavin-domadiya.my.canva.site" target="_blank" rel="noopener">View case studies</a>
+          </div>
+        </div>
+
+        <div class="terminal">
+          <div class="terminal-bar">
+            <span></span><span></span><span></span>
+            <span class="fname">profile.ts</span>
+          </div>
+          <div class="terminal-body" id="typeTarget"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Summary</h2>
+        <span class="sec-index">§ 01 — Profile</span>
+      </div>
+      <div class="about-body">
+        <div>
+          <p>Senior Software Engineer with over six years architecting and delivering high-performance web and hybrid mobile applications for enterprise clients. Specializes in the Angular ecosystem (v10–22), Ionic Framework, and iOS development, with a track record of improving application performance by 30% and scaling products to 100K+ active users.</p>
+          <p>Skilled at leading cross-functional Agile teams, mentoring engineers, and building modular, maintainable frontend architectures that other teams can build on for years, not just for the next sprint.</p>
+        </div>
+        <div class="spec-card">
+          <h3>QUICK SPEC</h3>
+          <div class="spec-row"><span class="k">Location</span><span class="v">Surat, Gujarat, India</span></div>
+          <div class="spec-row"><span class="k">Phone</span><span class="v">+91 92658 05318</span></div>
+          <div class="spec-row"><span class="k">Email</span><span class="v">bhavindomadiya8980@gmail.com</span></div>
+          <div class="spec-row"><span class="k">LinkedIn</span><span class="v"><a href="https://linkedin.com/in/bhavin-domadiya" target="_blank" rel="noopener" style="color:var(--cyan); text-decoration:none;">bhavin-domadiya</a></span></div>
+          <div class="spec-row"><span class="k">Core stack</span><span class="v">Angular · Ionic · TypeScript</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Experience</h2>
+        <span class="sec-index">§ 02 — Work history</span>
+      </div>
+
+      <div class="exp-block">
+        <div class="exp-meta">
+          <p class="role">Senior Software Engineer</p>
+          <p class="org">Deskcode Solutions Pvt Ltd</p>
+          <p class="period">FEB 2020 — OCT 2025<br>Surat, India</p>
+        </div>
+        <ul class="exp-list">
+          <li>Architected a scalable Angular application foundation using feature modules, lazy-loaded routing, and a centralized service/DI layer — patterns later adopted team-wide for long-term maintainability.</li>
+          <li>Built and maintained hybrid mobile applications in Angular and Ionic serving 100K+ users, keeping performance and stability consistent across iOS and Android.</li>
+          <li>Improved app responsiveness and load times by 30% by optimizing change detection, restructuring lazy-loaded modules, and refactoring state management with RxJS.</li>
+          <li>Engineered custom Capacitor plugins to integrate native hardware — POS printers and peripherals unsupported by standard plugins — extending hybrid app functionality beyond typical limits.</li>
+          <li>Designed the application's state management layer using NgRx (actions, reducers, effects, selectors), enabling predictable data flow and faster debugging across a growing codebase.</li>
+          <li>Organized an Nx monorepo architecture with feature and shared libraries, accelerating build times and improving code reuse across multiple applications.</li>
+          <li>Automated build and release pipelines with GitHub Actions and Ionic Appflow, reducing manual deployment steps and release errors.</li>
+          <li>Reviewed pull requests and mentored junior developers, establishing testing standards using Jest and Jasmine.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Key Projects</h2>
+        <span class="sec-index">§ 03 — Selected work</span>
+      </div>
+
+      <div class="proj-panel">
+        <div class="proj-title-bar">
+          <h3>Colobbo — Web &amp; Mobile</h3>
+          <span class="proj-code">PROJ / COLOBBO</span>
+        </div>
+        <div class="proj-stack">
+          <span class="chip">Angular</span><span class="chip">Syncfusion</span><span class="chip">JWT</span><span class="chip">Sentry</span><span class="chip">AG Grid</span><span class="chip">Charts</span>
+        </div>
+        <div class="proj-body">
+          <ul>
+            <li>Optimized Syncfusion Grid components for performance and usability, with state persistence for filters, sorting, and pagination, plus custom cell templates.</li>
+            <li>Managed large-scale datasets with virtualization and memory-optimization techniques to keep thousands of records smooth and leak-free.</li>
+            <li>Built complex reactive forms with dynamic validation and real-time server-side validation across multi-field forms.</li>
+            <li>Implemented AWS Cognito authentication across web and mobile, handling secure login, tokens, and sessions.</li>
+            <li>Developed role-based access control using Angular Guards to secure navigation by user role.</li>
+            <li>Added SQLite offline storage on mobile with automatic background sync on reconnect, and Sentry for real-time production error tracking.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="proj-panel">
+        <div class="proj-title-bar">
+          <h3>Rewaa Merchant</h3>
+          <span class="proj-code">PROJ / REWAA</span>
+        </div>
+        <div class="proj-stack">
+          <span class="chip">Angular</span><span class="chip">Ionic</span><span class="chip">RxJS</span><span class="chip">Capacitor</span><span class="chip">POS Integration</span>
+        </div>
+        <div class="proj-body">
+          <ul>
+            <li>Developed a custom Capacitor plugin enabling native communication between POS hardware and the app across platforms.</li>
+            <li>Designed multiple customizable receipt templates for POS printing, adaptable to business and branch requirements.</li>
+            <li>Implemented multiple payment options and retail/wholesale pricing logic, including discount calculations and cart management.</li>
+            <li>Managed asynchronous multi-terminal POS printing across multiple registers per region, with self-serve terminal setup.</li>
+            <li>Integrated Firebase Crashlytics and Analytics for real-time error tracking and engagement insight.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="proj-panel">
+        <div class="proj-title-bar">
+          <h3>MECH.AI — AI-Powered Automotive Assistant</h3>
+          <span class="proj-code">PROJ / MECH-AI</span>
+        </div>
+        <div class="proj-stack">
+          <span class="chip">Angular</span><span class="chip">AI Integration</span><span class="chip">REST APIs</span><span class="chip">TypeScript</span>
+        </div>
+        <div class="proj-body">
+          <ul>
+            <li>Engineered an AI-driven diagnostics platform helping vehicle owners perform maintenance through an intelligent recommendation engine.</li>
+            <li>Integrated real-time parts databases and sourcing, streamlining workflows for professional shops and DIY users alike.</li>
+            <li>Improved iOS and Android build systems with command-based automation across development, staging, and production environments.</li>
+            <li>Built responsive, mobile-first UI rendering AI-generated data consistently across web and mobile.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Technical Skills</h2>
+        <span class="sec-index">§ 04 — Toolset</span>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-cell">
+          <h3>LANGUAGES</h3>
+          <div class="items"><span>TypeScript</span><span>JavaScript (ES6+)</span><span>Swift</span><span>HTML5</span><span>CSS3/SCSS</span></div>
+        </div>
+        <div class="skill-cell">
+          <h3>FRONTEND</h3>
+          <div class="items"><span>Angular</span><span>RxJS</span><span>NgRx</span><span>NGXS</span><span>Angular Material</span><span>Syncfusion</span><span>Tailwind CSS</span><span>Micro-frontends</span><span>WCAG</span><span>Signals</span></div>
+        </div>
+        <div class="skill-cell">
+          <h3>MOBILE</h3>
+          <div class="items"><span>Ionic Framework</span><span>Capacitor</span><span>iOS Native Plugins</span><span>SQLite</span><span>Offline Sync</span><span>Push Notifications</span><span>TestFlight</span></div>
+        </div>
+        <div class="skill-cell">
+          <h3>DEVOPS &amp; TOOLS</h3>
+          <div class="items"><span>GitHub Actions</span><span>CI/CD</span><span>Git</span><span>Nx Monorepo</span><span>App Flow</span><span>Jira</span><span>Agile/Scrum</span><span>Sentry</span></div>
+        </div>
+        <div class="skill-cell">
+          <h3>BACKEND &amp; APIS</h3>
+          <div class="items"><span>REST APIs</span><span>Firebase</span><span>Node.js</span><span>JWT</span><span>OAuth2</span><span>Payment Gateway Integration</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EDUCATION + ACHIEVEMENTS -->
+  <section id="education">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Education &amp; Recognition</h2>
+        <span class="sec-index">§ 05 — Background</span>
+      </div>
+      <div class="two-col">
+        <div>
+          <p class="chip" style="display:inline-block; margin-bottom:18px;">EDUCATION</p>
+          <div class="edu-item">
+            <p class="deg">Master of Computer Applications (MCA)</p>
+            <p class="school">Suresh Gyan Vihar University</p>
+            <p class="yrs">2019 — 2021</p>
+          </div>
+          <div class="edu-item">
+            <p class="deg">Bachelor of Computer Applications (BCA)</p>
+            <p class="school">Veer Narmad South Gujarat University</p>
+            <p class="yrs">2016 — 2019</p>
+          </div>
+        </div>
+        <div>
+          <p class="chip" style="display:inline-block; margin-bottom:18px;">ACHIEVEMENTS</p>
+          <div class="ach-item">
+            <div class="ach-icon">★</div>
+            <p><strong>Valuable Gem Award</strong> — recognized for outstanding contributions to project innovation and architectural design.</p>
+          </div>
+          <div class="ach-item">
+            <div class="ach-icon">★</div>
+            <p><strong>Key Value Player Award</strong> — recognized for consistent delivery excellence and high performance in mission-critical sprints.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <h2>Let's build something that scales.</h2>
+      <p>Open to Senior / Lead Frontend roles working with Angular, Ionic, and hybrid mobile teams. Reach out directly or browse full case studies.</p>
+      <div class="contact-links">
+        <a class="btn btn-primary" href="mailto:bhavindomadiya8980@gmail.com">bhavindomadiya8980@gmail.com</a>
+        <a class="btn btn-ghost" href="tel:+919265805318">+91 92658 05318</a>
+        <a class="btn btn-ghost" href="https://linkedin.com/in/bhavin-domadiya" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn btn-ghost" href="https://bhavin-domadiya.my.canva.site" target="_blank" rel="noopener">Portfolio</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  DRAWN &amp; BUILT — BHAVIN DOMADIYA · SURAT, INDIA · <span id="year"></span>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Hero terminal typing animation (single orchestrated moment on load)
+  const target = document.getElementById('typeTarget');
+  const lines = [
+    { text: "const engineer = {", cls: "" },
+    { text: "  name: 'Bhavin Domadiya',", cls: "prop-str" },
+    { text: "  role: 'Senior Frontend Engineer',", cls: "prop-str" },
+    { text: "  stack: ['Angular','Ionic','NgRx','TypeScript'],", cls: "prop-str" },
+    { text: "  experience: '6+ years',", cls: "prop-str" },
+    { text: "  usersServed: '100K+',", cls: "prop-str" },
+    { text: "  focus: 'scalable frontend architecture'", cls: "prop-str" },
+    { text: "};", cls: "" }
+  ];
+
+  function colorize(line){
+    return line
+      .replace(/const|role:|name:|stack:|experience:|usersServed:|focus:/g, m => {
+        if(m === 'const') return '<span class="kw">const</span>';
+        return '<span class="prop">' + m + '</span>';
+      })
+      .replace(/'([^']*)'/g, "<span class=\"str\">'$1'</span>");
+  }
+
+  let li = 0, ci = 0;
+  const speed = 16;
+
+  function typeNext(){
+    if(li >= lines.length){
+      target.innerHTML += '<span class="caret"></span>';
+      return;
+    }
+    const full = lines[li].text;
+    if(ci === 0){
+      target.innerHTML = target.innerHTML.replace('<span class="caret"></span>', '');
+    }
+    ci++;
+    const partial = full.slice(0, ci);
+    const rendered = renderSoFar(li, partial);
+    target.innerHTML = rendered + '<span class="caret"></span>';
+
+    if(ci >= full.length){
+      li++; ci = 0;
+      setTimeout(typeNext, 90);
+    } else {
+      setTimeout(typeNext, speed);
+    }
+  }
+
+  function renderSoFar(upToLineIndex, partialLastLine){
+    let out = '';
+    for(let i = 0; i < upToLineIndex; i++){
+      out += colorize(lines[i].text) + '\n';
+    }
+    out += colorize(partialLastLine);
+    return out;
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(typeNext, 400);
+  });
+
+  // Respect reduced motion: show final state immediately
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    target.innerHTML = lines.map(l => colorize(l.text)).join('\n');
+  }
+</script>
+
+</body>
+</html>
